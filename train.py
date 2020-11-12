@@ -7,7 +7,6 @@ import copy
 
 
 def load_dataset():
-    # data_path = 'pytorch_dataset/train/'
     data_path = 'pytorch_dataset/train'
     train_dataset = torchvision.datasets.ImageFolder(
         root=data_path,
@@ -109,11 +108,12 @@ def train_model(model, train_data_loader, test_data_loader, optimizer, num_epoch
 
 
 if __name__ == '__main__':
-    from net import vgg11_bn
+    from net import VGG
 
-    model = vgg11_bn()
+    model = VGG()
     train_loader, test_loader = load_dataset()
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
-    trained_model, val_acc_history, acc, loss = train_model(model, train_loader, test_loader, optimizer, 25)
-    torch.save(trained_model.state_dict(), 'loss_{:4f}__acc_{:4f}.pth.tar'.format(loss, acc))
+    trained_model, val_acc_history, loss, acc = train_model(model, train_loader, test_loader, optimizer, 5)
+    model.load_state_dict(torch.load('loss_0.000400__acc_5.000000.pth.tar'))
+    torch.save(trained_model.state_dict(), 'loss_{:2f}__acc_{:2f}.pth.tar'.format(loss, acc))
