@@ -11,7 +11,7 @@ model = VGG()
 model.load_state_dict(torch.load('loss_0.000400__acc_5.000000.pth.tar'))
 model.eval()
 
-i_name = ["ang", "background", "com_ar", "com_sm", "fla_ar", "fla_sm", "hal", "las", "lig", "sto", "sup_ar", "thu",
+i_name = ["ang", "null", "com_ar", "com_sm", "fla_ar", "fla_sm", "hal", "las", "lig", "sto", "sup_ar", "thu",
           "ver", "x1h", "x1r", "x2", "x3", "x4", "x6", "x8", "x15", ]
 
 preprocess = transforms.Compose([
