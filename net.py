@@ -1,10 +1,8 @@
 import torch.nn as nn
 
-cfg = {
-    3: [8, 'M', 16, 'M', 32, 'M',],
-    5: [64, 'M', 128, 'M', 256, 'M',],
-    8: [64, 'M', 128, 'M', 256, 'M', 512, 'M', 512, 'M'],
-    11: [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
+size_config = {
+    64: [[6, 'M', 12, 'M', 12, 'M'], [768, 256, 128]],
+    32: [[6, 'M', 12, 'M'], [768, 256, 128]],
 }
 
 
@@ -25,17 +23,18 @@ def make_layers(cfg, batch_norm=False):
 
 
 class VGG(nn.Module):
-    def __init__(self, num_classes, vgg=3, batch_norm=True, init_weights=True):
+    def __init__(self, in_size, num_classes, batch_norm=True, init_weights=True):
         super(VGG, self).__init__()
-        self.features = make_layers(cfg[vgg], batch_norm=batch_norm)
+        self.features = make_layers(size_config[in_size][0], batch_norm=batch_norm)
+        a, b, c = size_config[in_size][1]
         self.classifier = nn.Sequential(
-            nn.Linear(32 * 8 * 8, 256),
+            nn.Linear(a, b),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(256, 256),
+            nn.Linear(b, c),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(256, num_classes),
+            nn.Linear(c, num_classes),
         )
         if init_weights:
             self._initialize_weights()

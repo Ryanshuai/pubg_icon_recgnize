@@ -57,12 +57,6 @@ class Generater:
 if __name__ == '__main__':
     import os
 
-    gun_names = ['m416', 'scar', 'g36c', 'qbz', 'm249', 'aug', 'm762', 'akm', 'mk14', 'groza', 'uzi', 'tommy', 'vss',
-                 'pp19', 'ump45', 'vector', 'mk47', 'slr', 's1897', 'mini14', 'awm', 's686', 'win94', 'dbs', 'm24',
-                 '98k', 'qbu', 'sks', 'mp5k', 's12k', 'dp28', 'm16', ]
-    fire_mode = ["single", "burst2", "burst3", "full"]
-    in_tab = ["in_tab"]
-
 
     def generate_one_dateset(file_name, item_names, in_root="2foreground"):
         for item_name in item_names:
@@ -80,19 +74,32 @@ if __name__ == '__main__':
                 im = gen.generate_icon()
                 cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
-        out_dir = os.path.join(file_name, "train", "background")
+        out_dir = os.path.join(file_name, "train", "0background")
         os.makedirs(out_dir, exist_ok=True)
         for i in range(500):
             im = gen.generate_background()
             cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
-        out_dir = os.path.join(file_name, "val", "background")
+        out_dir = os.path.join(file_name, "val", "0background")
         os.makedirs(out_dir, exist_ok=True)
         for i in range(50):
             im = gen.generate_background()
             cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
 
-    generate_one_dateset("gun_names", gun_names)
-    generate_one_dateset("fire_mode", fire_mode)
-    generate_one_dateset("in_tab", in_tab)
+    pos_name_dict = {
+        'gun_scope': ['x1h', 'x1r', 'x2', 'x3', 'x4', 'x6', 'x8', 'x15', ],
+        'gun_muzzle': ['m_com_ar', 'm_com_sm', 'm_fla_ar', 'm_fla_sm', 'm_sup_ar'],
+        'gun_grip': ['g_ang', 'g_hal', 'g_las', 'g_lig', 'g_thu', 'g_ver'],
+        'gun_butt': ['b_sto'],
+
+        'gun_name': ['m416', 'scar', 'g36c', 'qbz', 'm249', 'aug', 'm762', 'akm', 'mk14', 'groza', 'uzi', 'tommy',
+                     'vss', 'pp19', 'ump45', 'vector', 'mk47', 'slr', 's1897', 'mini14', 'awm', 's686', 'win94', 'dbs',
+                     'm24', '98k', 'qbu', 'sks', 'mp5k', 's12k', 'dp28', 'm16', ],
+        'fire_mode': ["single", "burst2", "burst3", "full"],
+        'in_tab': ["in_tab"],
+    }
+
+    for pos_name, name_list in pos_name_dict.items():
+        generate_one_dateset(pos_name, name_list)
+

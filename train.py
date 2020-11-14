@@ -7,12 +7,10 @@ import time
 import copy
 
 
-def load_dataset():
-    data_path = 'pytorch_dataset/train'
-
+def load_dataset(data_dir, in_size):
     train_dataset = torchvision.datasets.ImageFolder(
-        root=data_path,
-        transform=transforms.Compose([transforms.Resize((64, 64)), transforms.ToTensor(), ])
+        root=os.path.join(data_dir, "train"),
+        transform=transforms.Compose([transforms.Resize((in_size, in_size)), transforms.ToTensor(), ])
     )
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
@@ -21,10 +19,9 @@ def load_dataset():
         shuffle=True
     )
 
-    data_path = 'pytorch_dataset/val'
     test_dataset = torchvision.datasets.ImageFolder(
-        root=data_path,
-        transform=transforms.Compose([transforms.Resize((64, 64)), transforms.ToTensor(), ])
+        root=os.path.join(data_dir, "val"),
+        transform=transforms.Compose([transforms.Resize((in_size, in_size)), transforms.ToTensor(), ])
     )
     test_loader = torch.utils.data.DataLoader(
         test_dataset,
@@ -113,10 +110,38 @@ if __name__ == '__main__':
     import os
     from net import VGG
 
-    model = VGG(len(os.listdir('pytorch_dataset/train')))
-    train_loader, test_loader = load_dataset()
+    # in_size = 64
+    # for data_dir in ['gun_scope', 'gun_muzzle', 'gun_grip', 'gun_butt', 'gun_name']:
+    #     out_num = len(os.listdir(os.path.join(data_dir, "train")))
+    #
+    #     model = VGG(in_size, out_num)
+    #     train_loader, test_loader = load_dataset(data_dir, in_size)
+    #     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    #
+    #     trained_model, val_acc_history, loss, acc = train_model(model, train_loader, test_loader, optimizer, 10)
+    #     print('{}_loss_{:2f}__acc_{:2f}.pth.tar'.format(data_dir, loss, acc))
+    #     torch.save(trained_model.state_dict(), '{}.pth.tar'.format(data_dir))
+    #
+    # in_size = 32
+    # for data_dir in ['fire_mode', 'in_tab']:
+    #     out_num = len(os.listdir(os.path.join(data_dir, "train")))
+    #
+    #     model = VGG(in_size, out_num)
+    #     train_loader, test_loader = load_dataset(data_dir, in_size)
+    #     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+    #
+    #     trained_model, val_acc_history, loss, acc = train_model(model, train_loader, test_loader, optimizer, 10)
+    #     print('{}_loss_{:2f}__acc_{:2f}.pth.tar'.format(data_dir, loss, acc))
+    #     torch.save(trained_model.state_dict(), '{}.pth.tar'.format(data_dir))
+
+    in_size = 32
+    data_dir = 'in_tab'
+    out_num = len(os.listdir(os.path.join(data_dir, "train")))
+
+    model = VGG(in_size, out_num)
+    train_loader, test_loader = load_dataset(data_dir, in_size)
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
-    # model.load_state_dict(torch.load('loss_0.002165__acc_5.000000.pth.tar'))
     trained_model, val_acc_history, loss, acc = train_model(model, train_loader, test_loader, optimizer, 10)
-    torch.save(trained_model.state_dict(), 'loss_{:2f}__acc_{:2f}.pth.tar'.format(loss, acc))
+    print('{}_loss_{:2f}__acc_{:2f}.pth.tar'.format(data_dir, loss, acc))
+    torch.save(trained_model.state_dict(), '{}.pth.tar'.format(data_dir))
