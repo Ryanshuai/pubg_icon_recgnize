@@ -28,7 +28,7 @@ class Generater:
     def __init__(self, icon_dir):
         print(icon_dir)
         os.makedirs(icon_dir, exist_ok=True)
-        input_background_dir = "original_data/background_screen"
+        input_background_dir = "original_data/screen/background_screen"
         background_paths = os.listdir(input_background_dir)
         self.background_screens = [cv2.imread(os.path.join(input_background_dir, path)) for path in background_paths]
 

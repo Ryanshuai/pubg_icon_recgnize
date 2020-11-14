@@ -35,10 +35,10 @@ def get_white_shield(im, min_rgb=235):
 #     out_path = os.path.join(out_dir, im_name)
 #     cv2.imwrite(out_path, rgba)
 
-
+root_dir = "screen"
 for name in ["single_screen", "burst2_screen", "burst3_screen", "full_screen"]:
     for im_name in os.listdir(name):
-        im_path = os.path.join(name, im_name)
+        im_path = os.path.join(root_dir, name, im_name)
         print(im_path)
         im = cv2.imread(im_path)
         im_crap = im[1330:1364, 1648:1676, :]
@@ -63,3 +63,4 @@ for name in ["single_screen", "burst2_screen", "burst3_screen", "full_screen"]:
         os.makedirs(out_dir, exist_ok=True)
         out_path = os.path.join(out_dir, im_name)
         cv2.imwrite(out_path, rgba)
+

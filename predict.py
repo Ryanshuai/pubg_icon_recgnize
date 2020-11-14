@@ -7,17 +7,14 @@ import numpy as np
 
 from net import VGG
 
-model = VGG()
-model.load_state_dict(torch.load('loss_0.000400__acc_5.000000.pth.tar'))
+model = VGG(len(os.listdir('pytorch_dataset/train')))
+model.load_state_dict(torch.load('loss_0.001207__acc_5.000000.pth.tar'))
 model.eval()
 
-i_name = ["ang", "null", "com_ar", "com_sm", "fla_ar", "fla_sm", "hal", "las", "lig", "sto", "sup_ar", "thu",
-          "ver", "x1h", "x1r", "x2", "x3", "x4", "x6", "x8", "x15", ]
+i_name = ["ang", "burst2", "burst3", "com_ar", "com_sm", "fla_ar", "fla_sm", "full", "hal", "in_tab", "las",
+          "lig", "single", "sto", "sup_ar", "thu", "ver", "x1h", "x1r", "x2", "x3", "x4", "x6", "x8", "x15", ]
 
-preprocess = transforms.Compose([
-    transforms.Resize(224),
-    transforms.ToTensor(),
-])
+preprocess = transforms.Compose([transforms.Resize((64, 64)),transforms.ToTensor()])
 
 
 def image2name(im):

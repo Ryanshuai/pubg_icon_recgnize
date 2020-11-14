@@ -2,33 +2,35 @@ import torchvision
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torchvision import transforms
 import time
 import copy
 
 
 def load_dataset():
     data_path = 'pytorch_dataset/train'
+
     train_dataset = torchvision.datasets.ImageFolder(
         root=data_path,
-        transform=torchvision.transforms.ToTensor()
+        transform=transforms.Compose([transforms.Resize((64, 64)), transforms.ToTensor(), ])
     )
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
         batch_size=16,
-        num_workers=0,
+        num_workers=8,
         shuffle=True
     )
 
     data_path = 'pytorch_dataset/val'
     test_dataset = torchvision.datasets.ImageFolder(
         root=data_path,
-        transform=torchvision.transforms.ToTensor()
+        transform=transforms.Compose([transforms.Resize((64, 64)), transforms.ToTensor(), ])
     )
     test_loader = torch.utils.data.DataLoader(
         test_dataset,
         batch_size=16,
-        num_workers=0,
-        shuffle=True
+        num_workers=8,
+        shuffle=True,
     )
 
     return train_loader, test_loader
@@ -108,12 +110,13 @@ def train_model(model, train_data_loader, test_data_loader, optimizer, num_epoch
 
 
 if __name__ == '__main__':
+    import os
     from net import VGG
 
-    model = VGG()
+    model = VGG(len(os.listdir('pytorch_dataset/train')))
     train_loader, test_loader = load_dataset()
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
-    trained_model, val_acc_history, loss, acc = train_model(model, train_loader, test_loader, optimizer, 5)
-    model.load_state_dict(torch.load('loss_0.000400__acc_5.000000.pth.tar'))
+    # model.load_state_dict(torch.load('loss_0.002165__acc_5.000000.pth.tar'))
+    trained_model, val_acc_history, loss, acc = train_model(model, train_loader, test_loader, optimizer, 10)
     torch.save(trained_model.state_dict(), 'loss_{:2f}__acc_{:2f}.pth.tar'.format(loss, acc))
