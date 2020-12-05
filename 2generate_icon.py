@@ -27,6 +27,7 @@ def generate_icon_foreground(icon_4c):
 class Generater:
     def __init__(self, in_icon_dir):
         input_background_dir = "1screens/background"
+        # input_background_dir = "1screens/outside"
         background_paths = os.listdir(input_background_dir)
         self.background_screens = [cv2.imread(os.path.join(input_background_dir, path)) for path in background_paths]
 
@@ -58,31 +59,31 @@ if __name__ == '__main__':
     import os
 
 
-    def generate_one_dateset(file_name, item_names, in_root="2foreground"):
+    def generate_one_dateset(file_name, item_names, train_set_num=500, in_root="2foreground"):
         for item_name in item_names:
             in_dir = os.path.join(in_root, item_name)
             gen = Generater(in_dir)
             out_dir = os.path.join(file_name, "train", item_name)
             os.makedirs(out_dir, exist_ok=True)
-            for i in range(500):
+            for i in range(train_set_num):
                 im = gen.generate_icon()
                 cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
             out_dir = os.path.join(file_name, "val", item_name)
             os.makedirs(out_dir, exist_ok=True)
-            for i in range(50):
+            for i in range(100):
                 im = gen.generate_icon()
                 cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
         out_dir = os.path.join(file_name, "train", "0background")
         os.makedirs(out_dir, exist_ok=True)
-        for i in range(500):
+        for i in range(train_set_num):
             im = gen.generate_background()
             cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
         out_dir = os.path.join(file_name, "val", "0background")
         os.makedirs(out_dir, exist_ok=True)
-        for i in range(50):
+        for i in range(100):
             im = gen.generate_background()
             cv2.imwrite(os.path.join(out_dir, str(i) + ".png"), im)
 
@@ -91,7 +92,7 @@ if __name__ == '__main__':
         'gun_scope': ['x1h', 'x1r', 'x2', 'x3', 'x4', 'x6', 'x8', 'x15', ],
         'gun_muzzle': ['m_com_ar', 'm_com_sm', 'm_fla_ar', 'm_fla_sm', 'm_sup_ar'],
         'gun_grip': ['g_ang', 'g_hal', 'g_las', 'g_lig', 'g_thu', 'g_ver'],
-        'gun_butt': ['b_sto'],
+        'gun_butt': ['sto'],
 
         'gun_name': ['m416', 'scar', 'g36c', 'qbz', 'm249', 'aug', 'm762', 'akm', 'mk14', 'groza', 'uzi', 'tommy',
                      'vss', 'pp19', 'ump45', 'vector', 'mk47', 'slr', 's1897', 'mini14', 'awm', 's686', 'win94', 'dbs',
@@ -100,6 +101,13 @@ if __name__ == '__main__':
         'in_tab': ["in_tab"],
     }
 
-    for pos_name, name_list in pos_name_dict.items():
-        generate_one_dateset(pos_name, name_list)
+    # for pos_name, name_list in pos_name_dict.items():
+    #     generate_one_dateset(pos_name), name_list)
 
+    generate_one_dateset('dataSets/gun_butt', ['sto', ], train_set_num=500)
+    # generate_one_dateset('in_tab', ['in_tab', ],train_set_num=2500)
+    # generate_one_dateset('gun_scope', ['x1h', 'x1r', 'x2', 'x3', 'x4', 'x6', 'x8', 'x15', ])
+    # generate_one_dateset('gun_grip', ['g_ang', 'g_hal', 'g_las', 'g_lig', 'g_thu', 'g_ver'])
+    # generate_one_dateset('gun_name',['m416', 'scar', 'g36c', 'qbz', 'm249', 'aug', 'm762', 'akm', 'mk14', 'groza', 'uzi', 'tommy',
+    #                  'vss', 'pp19', 'ump45', 'vector', 'mk47', 'slr', 's1897', 'mini14', 'awm', 's686', 'win94', 'dbs',
+    #                  'm24', '98k', 'qbu', 'sks', 'mp5k', 's12k', 'dp28', 'm16', ])
